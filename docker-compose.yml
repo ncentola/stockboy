@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+
+  queue:
+    image: 'rabbitmq:3.6-management-alpine'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    networks:
+      - network
+
+  db:
+    image: postgres:10.4
+    environment:
+      - POSTGRES_USER=stockboy
+      - POSTGRES_PASSWORD=stockboy
+      - POSTGRES_DB=stockboy
+    ports:
+      - 5432
+    # volumes:
+    # - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - network
+
+  consumer:
+    build: consumer
+    depends_on:
+      - db
+      - queue
+    environment:
+      - POSTGRES_USER=stockboy
+      - POSTGRES_PASSWORD=stockboy
+      - POSTGRES_DB=stockboy
+    restart: on-failure
+    links:
+      - db:db
+    networks:
+      - network
+
+  scanner:
+    build: scanner
+    depends_on:
+      - db
+      - queue
+    restart: on-failure
+    networks:
+      - network
+
+  api:
+    build: api
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=stockboy
+      - POSTGRES_PASSWORD=stockboy
+      - POSTGRES_DB=stockboy
+    restart: on-failure
+    links:
+      - db:db
+    ports:
+      - 5000:80
+    networks:
+      - network
+
+networks:
+  network: {}
