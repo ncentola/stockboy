@@ -23,8 +23,8 @@ services:
       - POSTGRES_DB=stockboy
     ports:
       - 5432
-    # volumes:
-    # - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -33,15 +33,22 @@ services:
     networks:
       - network
 
-  consumer:
-    build: consumer
+  transaction_consumer:
+    build: transaction_consumer
     depends_on:
       - db
       - queue
-    environment:
-      - POSTGRES_USER=stockboy
-      - POSTGRES_PASSWORD=stockboy
-      - POSTGRES_DB=stockboy
+    restart: on-failure
+    links:
+      - db:db
+    networks:
+      - network
+
+  upc_lookup:
+    build: upc_lookup
+    depends_on:
+      - db
+      - queue
     restart: on-failure
     links:
       - db:db
@@ -73,5 +80,8 @@ services:
     networks:
       - network
 
+volumes:
+     pgdata:
+       
 networks:
   network: {}
