@@ -6,7 +6,7 @@ class TransactionSchema(ma.Schema):
 
 class ProductSchema(ma.Schema):
     class Meta:
-        fields = ('upc', 'data')
+        fields = ('upc', 'data', 'created_at')
 
 # init Schemas
 transaction_schema  = TransactionSchema()
