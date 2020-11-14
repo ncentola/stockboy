@@ -3,8 +3,8 @@
 from consumer import Consumer
 
 def main():
-    c = Consumer()
-    c.consume(queue='scanner')
+    c = Consumer(exchange='scans')
+    c.consume(queue='transactions')
 
 if __name__ == '__main__':
     main()
