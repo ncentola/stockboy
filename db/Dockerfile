@@ -1,5 +1,0 @@
-FROM postgres:10.4
-
-ENV POSTGRES_USER stockboy
-ENV POSTGRES_PASSWORD stockboy
-ENV POSTGRES_DB stockboy
