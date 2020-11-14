@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 from publisher import Publisher
 from constants import TEST_UPC_CODES
+from time import sleep
 import pika, random, json
 
 class Scanner(Publisher):
@@ -26,15 +27,13 @@ class Scanner(Publisher):
     def read(self):
 
         while True:
-            r = random.randint(1, 1000000)
-            # print(r)
-            if r == 42:
-                r_upc = random.randint(0, len(TEST_UPC_CODES)-1)
-                message = {
-                    'upc': TEST_UPC_CODES[r_upc],
-                    'quantity': self.mode
-                }
-                return json.dumps(message)
+            sleep(5)
+            r_upc = random.randint(0, len(TEST_UPC_CODES)-1)
+            message = {
+                'upc': TEST_UPC_CODES[r_upc],
+                'quantity': self.mode
+            }
+            return json.dumps(message)
 
     def run(self):
 
