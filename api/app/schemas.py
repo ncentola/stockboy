@@ -8,9 +8,16 @@ class ProductSchema(ma.Schema):
     class Meta:
         fields = ('upc', 'data', 'created_at')
 
-# init Schemas
-transaction_schema  = TransactionSchema()
-transactions_schema = TransactionSchema(many=True)
+class ProductQuantitySchema(ma.Schema):
+    class Meta:
+        fields = ('upc', 'quantity', 'updated_at')
 
-product_schema      = ProductSchema()
-products_schema     = ProductSchema(many=True)
+# init Schemas
+transaction_schema          = TransactionSchema()
+transactions_schema         = TransactionSchema(many=True)
+
+product_schema              = ProductSchema()
+products_schema             = ProductSchema(many=True)
+
+product_quantity_schema     = ProductQuantitySchema()
+product_quantities_schema   = ProductQuantitySchema(many=True)

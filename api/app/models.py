@@ -1,5 +1,6 @@
 from sqlalchemy.dialects.postgresql.json import JSONB
 from datetime import datetime as dt
+from sqlalchemy import text
 from app import db
 
 class Transaction(db.Model):
@@ -28,3 +29,16 @@ class Product(db.Model):
 
     def __repr__(self):
         return '<Product {}>'.format(self.id)
+
+class ProductQuantity(db.Model):
+    __tablename__       = 'product_quantities'
+    upc                 = db.Column(db.String(64), primary_key=True)
+    quantity            = db.Column(db.Integer)
+    updated_at          = db.Column(db.DateTime, default=dt.utcnow)
+
+    def __init__(self, upc, quantity):
+        self.upc        = upc
+        self.quantity   = quantity
+
+    def __repr__(self):
+        return '<ProductQuantity {}>'.format(self.id)
