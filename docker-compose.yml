@@ -24,6 +24,7 @@ services:
     ports:
       - 5432
     volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -64,6 +65,28 @@ services:
     networks:
       - network
 
+  frontend:
+    build: frontend
+    depends_on:
+      - db
+      - api
+    restart: on-failure
+    links:
+      - db:db
+    ports:
+      - 8050:8050
+    networks:
+      - network
+
+  scanner:
+    build: scanner
+    depends_on:
+      - db
+      - queue
+    restart: on-failure
+    networks:
+      - network
+
   api:
     build: api
     depends_on:
@@ -82,6 +105,6 @@ services:
 
 volumes:
      pgdata:
-       
+
 networks:
   network: {}
