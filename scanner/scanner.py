@@ -27,7 +27,7 @@ class Scanner(Publisher):
     def read(self):
 
         while True:
-            sleep(5)
+            sleep(2)
             r_upc = random.randint(0, len(TEST_UPC_CODES)-1)
             message = {
                 'upc': TEST_UPC_CODES[r_upc],
