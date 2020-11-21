@@ -1,0 +1,21 @@
+# TODO version-specific requirements
+
+# ------- shared --------
+pika
+requests
+
+
+# -------- api ----------
+flask
+flask-migrate
+flask-restful
+flask-marshmallow
+marshmallow-sqlalchemy
+sqlalchemy
+psycopg2-binary
+python-dotenv
+
+
+# ------ frontend -------
+dash
+pandas
