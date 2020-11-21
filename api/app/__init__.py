@@ -15,4 +15,4 @@ migrate = Migrate(app, db)
 
 api = Api(app)
 
-from app import resources, schemas, models, util_routes
+from app import resources, schemas, models, util_routes, views
