@@ -35,7 +35,7 @@ services:
       - network
 
   transaction_consumer:
-    build: transaction_consumer
+    image: python:3.8-slim-buster
     depends_on:
       - db
       - queue
@@ -44,9 +44,12 @@ services:
       - db:db
     networks:
       - network
+    volumes:
+      - ./transaction_consumer:/service
+    entrypoint: ['sh', '/service/entrypoint.sh']
 
   upc_lookup:
-    build: upc_lookup
+    image: python:3.8-slim-buster
     depends_on:
       - db
       - queue
@@ -55,18 +58,24 @@ services:
       - db:db
     networks:
       - network
+    volumes:
+      - ./upc_lookup:/service
+    entrypoint: ['sh', '/service/entrypoint.sh']
 
   scanner:
-    build: scanner
+    image: python:3.8-slim-buster
     depends_on:
       - db
       - queue
     restart: on-failure
     networks:
       - network
+    volumes:
+      - ./scanner:/service
+    entrypoint: ['sh', '/service/entrypoint.sh']
 
   frontend:
-    build: frontend
+    image: python:3.8-slim-buster
     depends_on:
       - db
       - api
@@ -77,18 +86,24 @@ services:
       - 8050:8050
     networks:
       - network
+    volumes:
+      - ./frontend:/service
+    entrypoint: ['sh', '/service/entrypoint.sh']
 
   scanner:
-    build: scanner
+    image: python:3.8-slim-buster
     depends_on:
       - db
       - queue
     restart: on-failure
     networks:
       - network
+    volumes:
+      - ./scanner:/service
+    entrypoint: ['sh', '/service/entrypoint.sh']
 
   api:
-    build: api
+    image: python:3.8-slim-buster
     depends_on:
       - db
     environment:
@@ -102,6 +117,9 @@ services:
       - 5000:80
     networks:
       - network
+    volumes:
+      - ./api:/service
+    entrypoint: ['sh', '/service/entrypoint.sh']
 
 volumes:
      pgdata:
