@@ -19,6 +19,25 @@ services:
     networks:
       - network
 
+  flyway:
+    image: flyway/flyway
+    depends_on:
+      - db
+    links:
+      - db:db
+    environment:
+      - POSTGRES_USER=stockboy
+      - POSTGRES_PASSWORD=stockboy
+      - POSTGRES_DB=stockboy
+    volumes:
+      - ./flyway/conf:/flyway/conf
+      - ./flyway/sql:/flyway/sql
+    command: migrate
+    networks:
+      - network
+    # entrypoint: ['tail', '-f', '/dev/null']
+    # command: -url=jdbc:postgresql://db:5432/stockboy -user=stockboy -password=stockboy -connectRetries=60 migrate
+
   db:
     image: postgres:10.4
     environment:
@@ -26,9 +45,8 @@ services:
       - POSTGRES_PASSWORD=stockboy
       - POSTGRES_DB=stockboy
     ports:
-      - 5432
+      - "5432:5432"
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
