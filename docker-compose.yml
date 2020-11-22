@@ -2,6 +2,10 @@ version: '3'
 
 services:
 
+  service_base:
+    build: .
+    image: service_base
+
   queue:
     image: 'rabbitmq:3.6-management-alpine'
     ports:
@@ -35,41 +39,51 @@ services:
       - network
 
   transaction_consumer:
-    build: transaction_consumer
+    image: service_base
     depends_on:
       - db
       - queue
+      - service_base
     restart: on-failure
     links:
       - db:db
     networks:
       - network
+    volumes:
+      - ./transaction_consumer:/service
 
   upc_lookup:
-    build: upc_lookup
+    image: service_base
     depends_on:
       - db
       - queue
+      - service_base
     restart: on-failure
     links:
       - db:db
     networks:
       - network
+    volumes:
+      - ./upc_lookup:/service
 
   scanner:
-    build: scanner
+    image: service_base
     depends_on:
       - db
       - queue
+      - service_base
     restart: on-failure
     networks:
       - network
+    volumes:
+      - ./scanner:/service
 
   frontend:
-    build: frontend
+    image: service_base
     depends_on:
       - db
       - api
+      - service_base
     restart: on-failure
     links:
       - db:db
@@ -77,20 +91,26 @@ services:
       - 8050:8050
     networks:
       - network
+    volumes:
+      - ./frontend:/service
 
   scanner:
-    build: scanner
+    image: service_base
     depends_on:
       - db
       - queue
+      - service_base
     restart: on-failure
     networks:
       - network
+    volumes:
+      - ./scanner:/service
 
   api:
-    build: api
+    image: service_base
     depends_on:
       - db
+      - service_base
     environment:
       - POSTGRES_USER=stockboy
       - POSTGRES_PASSWORD=stockboy
@@ -102,6 +122,8 @@ services:
       - 5000:80
     networks:
       - network
+    volumes:
+      - ./api:/service
 
 volumes:
      pgdata:
