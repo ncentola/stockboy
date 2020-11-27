@@ -32,3 +32,7 @@ Currently a simple Plotly Dash data table which some search & sort functionality
 
 ### Database
 Simple Postgres db, schemas managed by Flyway
+
+## TODO
+- API Auth
+- Multi-tenancy?
