@@ -6,6 +6,20 @@ I often forget what I have in my home pantry and end up buying more diced tomato
 
 This is a simple system that allows me to check what I have in stock from anywhere
 
+## Quick Start
+### First Install
+- git
+- Docker
+- docker-compose
+
+### Then
+```bash
+git clone git@github.com:ncentola/stockboy.git
+cd stockboy
+
+docker-compose up --build
+```
+
 ## Architecture
 
 ![Architecture](/stockboy.png)
