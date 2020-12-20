@@ -7,10 +7,15 @@ services:
     image: service_base
 
   queue:
-    image: 'rabbitmq:3.6-management-alpine'
+    image: 'rabbitmq:3.8-management-alpine'
     ports:
       - '5672:5672'
       - '15672:15672'
+    expose:
+      - 15676
+    volumes:
+      - ./queue/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./queue/enabled_plugins:/etc/rabbitmq/enabled_plugins
     healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:15672"]
         interval: 30s
@@ -33,6 +38,21 @@ services:
       - ./flyway/conf:/flyway/conf
       - ./flyway/sql:/flyway/sql
     command: migrate
+    networks:
+      - network
+
+  react:
+    container_name: frontend
+    build:
+      context: ./react
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./react/ssl:/etc/nginx/certs
+    depends_on:
+      - api
     networks:
       - network
 
@@ -132,10 +152,10 @@ services:
       - POSTGRES_PASSWORD=stockboy
       - POSTGRES_DB=stockboy
     restart: on-failure
-    links:
-      - db:db
     ports:
       - 5000:80
+    expose:
+      - 80
     networks:
       - network
     volumes:
