@@ -9,6 +9,7 @@ requests
 flask
 flask-restful
 flask-marshmallow
+flask_sqlalchemy
 marshmallow-sqlalchemy
 sqlalchemy
 psycopg2-binary
