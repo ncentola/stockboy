@@ -14,11 +14,18 @@ app = dash.Dash(__name__)
 app.layout = html.Div([
     dash_table.DataTable(
         id='datatable-interactivity',
+        style_table={
+            'whiteSpace': 'normal',
+            'height': 'auto',
+            'lineHeight': '100px',
+            'fontSize': 20,
+            'width': 'auto'
+        },
         columns=[
             {"name": i, "id": i, "deletable": False, "selectable": True} for i in pd.DataFrame(data).columns
         ],
         data=data,
-        editable=True,
+        editable=False,
         filter_action="native",
         sort_action="native",
         sort_mode="multi",
@@ -29,9 +36,8 @@ app.layout = html.Div([
         selected_rows=[],
         page_action="native",
         page_current= 0,
-        page_size= 10,
+        page_size= 100,
     ),
-    html.Div(id='hidden_div', style={'display':'none'}),
     html.Div(id='datatable-interactivity-container'),
     dcc.Interval(
             id='interval-component',
